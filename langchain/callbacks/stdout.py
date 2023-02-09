@@ -54,7 +54,7 @@ class StdOutCallbackHandler(BaseCallbackHandler):
         **kwargs: Any,
     ) -> None:
         """Print out the log in specified color."""
-        print_text(action.log, color=color if color else self.color)
+        print_text(action.log, color=color or self.color)
 
     def on_tool_end(
         self,
@@ -66,7 +66,7 @@ class StdOutCallbackHandler(BaseCallbackHandler):
     ) -> None:
         """If not the final action, print out observation."""
         print_text(f"\n{observation_prefix}")
-        print_text(output, color=color if color else self.color)
+        print_text(output, color=color or self.color)
         print_text(f"\n{llm_prefix}")
 
     def on_tool_error(
@@ -83,7 +83,7 @@ class StdOutCallbackHandler(BaseCallbackHandler):
         **kwargs: Optional[str],
     ) -> None:
         """Run when agent ends."""
-        print_text(text, color=color if color else self.color, end=end)
+        print_text(text, color=color or self.color, end=end)
 
     def on_agent_finish(
         self, finish: AgentFinish, color: Optional[str] = None, **kwargs: Any
