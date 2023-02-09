@@ -102,8 +102,8 @@ class ConversationBufferMemory(Memory, BaseModel):
             output_key = list(outputs.keys())[0]
         else:
             output_key = self.output_key
-        human = f"{self.human_prefix}: " + inputs[prompt_input_key]
-        ai = f"{self.ai_prefix}: " + outputs[output_key]
+        human = f"{self.human_prefix}: {inputs[prompt_input_key]}"
+        ai = f"{self.ai_prefix}: {outputs[output_key]}"
         self.buffer += "\n" + "\n".join([human, ai])
 
     def clear(self) -> None:
@@ -147,8 +147,8 @@ class ConversationBufferWindowMemory(Memory, BaseModel):
             output_key = list(outputs.keys())[0]
         else:
             output_key = self.output_key
-        human = f"{self.human_prefix}: " + inputs[prompt_input_key]
-        ai = f"{self.ai_prefix}: " + outputs[output_key]
+        human = f"{self.human_prefix}: {inputs[prompt_input_key]}"
+        ai = f"{self.ai_prefix}: {outputs[output_key]}"
         self.buffer.append("\n".join([human, ai]))
 
     def clear(self) -> None:
@@ -260,9 +260,7 @@ class ConversationEntityMemory(Memory, BaseModel):
             entities = []
         else:
             entities = [w.strip() for w in output.split(",")]
-        entity_summaries = {}
-        for entity in entities:
-            entity_summaries[entity] = self.store.get(entity, "")
+        entity_summaries = {entity: self.store.get(entity, "") for entity in entities}
         self.entity_cache = entities
         return {
             self.chat_history_key: "\n".join(self.buffer[-self.k :]),
@@ -281,8 +279,8 @@ class ConversationEntityMemory(Memory, BaseModel):
             output_key = list(outputs.keys())[0]
         else:
             output_key = self.output_key
-        human = f"{self.human_prefix}: " + inputs[prompt_input_key]
-        ai = f"{self.ai_prefix}: " + outputs[output_key]
+        human = f"{self.human_prefix}: {inputs[prompt_input_key]}"
+        ai = f"{self.ai_prefix}: {outputs[output_key]}"
         for entity in self.entity_cache:
             chain = LLMChain(llm=self.llm, prompt=self.entity_summarization_prompt)
             # key value store for entity
